@@ -1,0 +1,82 @@
+# Knowledge State Update After Tutor Explanation
+You will be provided with a slice of a math tutoring interaction: 
+the tutor's last message, the concepts potentially explained, the user's previous state for those concepts, the prerequisite states, and the user's response.
+
+Your job is to analyze the user's understanding of each concept after the current turn of talk.
+The supporting materials for your analysis are the tutor's explanation, list of concepts to be analyzed, user's previous understanding of the concepts and the user's response.
+Your analysis should be returned as updates of the user's understanding levels, formatted as a json object.
+
+There are five possible levels of understanding for each concept:
+* unknown_unknown: The user does not know the existence of the concept at all.
+* not_introduced: The user knows that such a concept exists but has no idea about it at all.
+* struggling: The user is having significant difficulty understanding this concept and wants to learn the most basic questions.
+* partial_understanding: The user has partial grasp of the concept, can ask related questions but can still make mistakes when applying.
+* knows_well: The user knows the concept very well and can confidently apply it without making mistakes.
+
+**Important constraints**
+* Only update concepts listed in **Concepts Potentially Explained**.
+* Never downgrade a concept's level. If evidence is insufficient, keep the previous state.
+* Use prerequisite evidence: if prerequisites are not well understood, do not assign knows_well.
+* Do not invent concepts or evidence; rely only on the given inputs.
+
+Below is the process you should follow while analyzing and updating:
+1. Check the user's previous understanding level of this concept.
+2. Check the user's previous understanding level of all the prerequisites of the concept: if they are not well understood, that concept cannot be updated as well understood.
+3. Read the tutor's message, consider: has the tutor explained this concept clear enough? How well can the user understand it through that explanation?
+4. Read the user's message, consider: has the user demonstrated good understanding of this concept after the tutor's explanation? Or did the user express further confusion?
+5. Combine all the information above to decide the new level for the concept.
+
+Below are the rules you should follow when analyzing and updating:
+1. The understanding level can never be downgraded by you.
+2. Consider the prerequisites along with user's current understanding: if the prerequisites of one concept are not well understood, that concept cannot be updated as well understood.
+3. If the tutor did not explain a concept in this turn, keep its state unchanged.
+
+## Concepts Potentially Explained
+{extracted_concepts}
+
+## User's Previous State for These Concepts
+{previous_states}
+
+## Student Message Before Tutor Response
+{user_response_analysis}
+
+## Prerequisites and Their Current States
+{prerequisite_states}
+
+## Tutor's Explanation
+{assistant_message}
+
+## Task
+Determine the new knowledge state for each concept.
+
+### Update Rules
+1. unknown_unknown -> not_introduced: If tutor mentioned/explained it
+2. not_introduced -> struggling/partial_understanding: Based on explanation clarity and prerequisites
+3. struggling -> partial_understanding/struggling: Based on user's demonstrated grasp
+4. partial_understanding -> knows_well/partial_understanding: Based on successful application
+
+### Factors to Consider
+- Did the tutor explain prerequisites first?
+- Was the explanation at appropriate level?
+- Did the user show signs of understanding?
+- Are there still gaps in prerequisite knowledge?
+
+After your analysis, output your updating for all the concepts in the following format.
+**Output requirements**
+* Output valid JSON only.
+* Include every concept from **Concepts Potentially Explained**, even if unchanged.
+* Confidence should be a float between 0.0 and 1.0.
+
+
+## Output
+```json
+{{
+  "concept_name": {{
+    "previous_state": "...",
+    "new_state": "...",
+    "evidence": "what indicated this change",
+    "confidence": 0.0
+  }}
+}}
+```
+

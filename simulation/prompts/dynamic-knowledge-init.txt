@@ -1,0 +1,32 @@
+# Task: Initialize User Knowledge State
+## Problem
+{math_problem}
+
+## Required Concepts (from solution analysis)
+{concept_list_with_prerequisites}
+
+## User Background
+- Education level: {education_level}
+- Prior knowledge indicators: {indicators}
+
+## Task
+For each concept, assign an initial knowledge state:
+- "knows_well": Can apply confidently
+- "partial_understanding": Knows basics, may make errors
+- "struggling": Heard of it, significant confusion
+- "not_introduced": Aware it exists, never learned
+- "unknown_unknown": Never heard of, does not know it is needed
+
+Important: A realistic user should have SOME concepts as "unknown_unknown".
+
+## Output Format
+```json
+{
+  "concept_name": {
+    "state": "...",
+    "reasoning": "why this state",
+    "can_ask_about": true/false
+  }
+}
+```
+

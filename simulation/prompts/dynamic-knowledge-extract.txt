@@ -1,0 +1,17 @@
+# Task: Extract Explained Concepts
+You will be given the tutor's last message and a list of candidate concepts.
+Return which concepts are explicitly explained, defined, or used in a way that teaches the student.
+
+## Tutor Message
+{assistant_message}
+
+## Candidate Concepts
+{candidate_concepts}
+
+## Output Format
+```json
+{{
+  "explained_concepts": ["concept_name_1", "concept_name_2"]
+}}
+```
+
